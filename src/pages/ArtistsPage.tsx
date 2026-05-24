@@ -17,41 +17,23 @@ import {
 import { SearchOutlined, HeartOutlined } from "@ant-design/icons";
 
 import logo from "../assets/logotocaraul.png";
+import { useEffect, useState } from "react";
+import { listArtists } from "../services/artistService";
+import type { Artist } from "../interfaces/Artist";
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Text } = Typography;
 
-const artists = [
-  {
-    name: "Elias Vance",
-    genre: "Soulful Jazz",
-    price: "$450",
-    image:
-      "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=800",
-  },
-  {
-    name: "Maya Flux",
-    genre: "Techno / Deep House",
-    price: "$800",
-    image:
-      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=800",
-  },
-  {
-    name: "The Echo Trio",
-    genre: "Acoustic Pop",
-    price: "$1,200",
-    image:
-      "https://images.unsplash.com/photo-1507838153414-b4b713384a76?q=80&w=800",
-  },
-  {
-    name: "Julian Thorne",
-    genre: "Classical Fusion",
-    price: "$600",
-    image:
-      "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?q=80&w=800",
-  },
-];
-
 function ArtistsPage() {
+  const [artists, setArtists] = useState<Artist[]>([]);
+
+  useEffect(() => {
+    const fetchArtists = async () => {
+      let artists = await listArtists();
+      setArtists(artists);
+    }
+    fetchArtists();
+  }, [])
+
   return (
     <Layout style={{ minHeight: "100vh", background: "#f5f7fb" }}>
       {/* HEADER */}
@@ -79,7 +61,7 @@ function ArtistsPage() {
             { key: "artistas", label: "Artistas" },
             { key: "eventos", label: "Eventos" },
           ]}
-        />  
+        />
 
         <Space size="large">
           <Input
@@ -184,7 +166,7 @@ function ArtistsPage() {
                 <Tag color="gold">DESTAQUES DO MÊS</Tag>
 
                 <Title
-                  style={{  
+                  style={{
                     color: "#fff",
                     marginTop: 16,
                     fontSize: 42,
@@ -249,7 +231,7 @@ function ArtistsPage() {
                   cover={
                     <img
                       alt={artist.name}
-                      src={artist.image}
+                      src={artist.photoUrl}
                       style={{
                         height: 240,
                         objectFit: "cover",
@@ -265,7 +247,7 @@ function ArtistsPage() {
                     overflow: "hidden",
                   }}
                 >
-                  <Tag>{artist.genre}</Tag>
+                  <Tag>{artist.genres}</Tag>
 
                   <Title level={4}>{artist.name}</Title>
 
@@ -274,7 +256,7 @@ function ArtistsPage() {
                   </Text>
 
                   <div style={{ marginTop: 16 }}>
-                    <Text strong>A partir de {artist.price}</Text>
+                    <Text strong>A partir de {artist.startPrice}</Text>
                   </div>
                 </Card>
               </Col>
