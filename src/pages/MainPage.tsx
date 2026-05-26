@@ -10,12 +10,16 @@ import {
 } from "antd";
 import logo from "../assets/logotocaraul.png";
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 const { Content, Footer } = Layout;
 const { Title, Text } = Typography;
 
 function MainPage() {
   const navigate = useNavigate();
+  React.useEffect(() => {
+    document.title = "TocaRaul - Página principal";
+  }, []);
   return (
     <Layout style={{ height: "100vh", overflow: "hidden", background: "#f5f7fb", display: "flex", flexDirection: "column" }}>
       
