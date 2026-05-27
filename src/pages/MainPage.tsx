@@ -21,7 +21,7 @@ function MainPage() {
     document.title = "TocaRaul - Página principal";
   }, []);
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden", background: "#f5f7fb", display: "flex", flexDirection: "column" }}>
+    <Layout style={{ height: "100vh", background: "#f5f7fb", display: "flex", flexDirection: "column" }}>
       
       <div style={{ 
         width: "100%", 

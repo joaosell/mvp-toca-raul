@@ -1,13 +1,6 @@
-import { useState } from "react";
-import {
-  Form,
-  Input,
-  Select,
-  Button,
-  Divider,
-  message,
-} from "antd";
-import { createArtist } from "../../services/artistService";
+import { useState, useEffect } from "react";
+import { Form, Input, Select, Button, Divider, message } from "antd";
+import { createArtist, listArtists } from "../../services/artistService";
 
 const { TextArea } = Input;
 
@@ -17,19 +10,45 @@ interface CadastroArtistaFormProps {
 
 export function CadastroArtistaForm({ onSuccess }: CadastroArtistaFormProps) {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+
+  const [bancoGenres, setBancoGenres] = useState<string[]>([]);
+
+  useEffect(() => {
+    const carregarGenerosDoBanco = async () => {
+      try {
+        const data = await listArtists();
+        if (data && Array.isArray(data)) {
+          const generosValidos = data
+            .map((item: any) =>
+              item.genres ? item.genres.toString().trim() : "",
+            )
+            .filter((g: string) => g !== "");
+
+          const generosUnicos = Array.from(new Set(generosValidos));
+          setBancoGenres(generosUnicos);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar gêneros para o formulário:", error);
+      }
+    };
+
+    carregarGenerosDoBanco();
+  }, []);
 
   const handleCadastrar = async (valores: any) => {
     setLoading(true);
     try {
       await createArtist(valores);
-      
+
       message.success("Artista publicado com sucesso! 🎸");
       form.resetFields();
-      onSuccess();       
+      onSuccess();
     } catch (error) {
       console.error(error);
-      message.error("Erro ao salvar o perfil. Verifique se o backend está ligado.");
+      message.error(
+        "Erro ao salvar o perfil. Verifique se o backend está ligado.",
+      );
     } finally {
       setLoading(false);
     }
@@ -44,16 +63,16 @@ export function CadastroArtistaForm({ onSuccess }: CadastroArtistaFormProps) {
       style={{ padding: "10px 0" }}
     >
       {/* SEÇÃO 1 */}
-      <Divider style={{ color: "#5b5ce2", fontSize: "14px", textAlign: "left" }}>
+      <Divider
+        style={{ color: "#5b5ce2", fontSize: "14px", textAlign: "left" }}
+      >
         1. Identificação
       </Divider>
 
       <Form.Item
         label="Nome Artístico / Banda"
         name="name"
-        rules={[
-          { required: true, message: "O nome artístico é obrigatório!" },
-        ]}
+        rules={[{ required: true, message: "O nome artístico é obrigatório!" }]}
       >
         <Input placeholder="Ex: Raul Seixas Cover" size="large" />
       </Form.Item>
@@ -61,31 +80,38 @@ export function CadastroArtistaForm({ onSuccess }: CadastroArtistaFormProps) {
       <Form.Item
         label="Gênero Musical Principal"
         name="genres"
-        rules={[
-          { required: true, message: "Selecione pelo menos um gênero!" },
-        ]}
+        rules={[{ required: true, message: "Selecione ou digite um gênero!" }]}
       >
-        <Select placeholder="Selecione o estilo musical" size="large">
-          <Select.Option value="Rock & Indie">Rock & Indie</Select.Option>
-          <Select.Option value="Eletrônico / DJ">Eletrônico / DJ</Select.Option>
-          <Select.Option value="Jazz & Blues">Jazz & Blues</Select.Option>
-          <Select.Option value="Acústico Solo">Acústico Solo</Select.Option>
+        <Select
+          mode="tags"
+          placeholder="Selecione ou digite um estilo musical"
+          size="large"
+          style={{ width: "100%" }}
+          tokenSeparators={[","]}
+        >
+          {bancoGenres.map((genre) => (
+            <Select.Option key={genre} value={genre}>
+              {genre}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 
       {/* SEÇÃO 2 */}
-      <Divider style={{ color: "#5b5ce2", fontSize: "14px", textAlign: "left" }}>
+      <Divider
+        style={{ color: "#5b5ce2", fontSize: "14px", textAlign: "left" }}
+      >
         2. Proposta Comercial
       </Divider>
 
       <Form.Item
         label="Preço Inicial do Show (Cachê)"
-        name="start_price"
+        name="startPrice"
         rules={[
           { required: true, message: "Insira o valor inicial do cachê!" },
         ]}
       >
-        <Input placeholder="Ex: R$ 1.500" size="large" />
+        <Input placeholder="Ex: 1500" size="large" />
       </Form.Item>
 
       <Form.Item
@@ -102,15 +128,20 @@ export function CadastroArtistaForm({ onSuccess }: CadastroArtistaFormProps) {
       </Form.Item>
 
       {/* SEÇÃO 3 */}
-      <Divider style={{ color: "#5b5ce2", fontSize: "14px", textAlign: "left" }}>
+      <Divider
+        style={{ color: "#5b5ce2", fontSize: "14px", textAlign: "left" }}
+      >
         3. Mídia e Links
       </Divider>
 
       <Form.Item
         label="URL da Foto de Perfil"
-        name="photo_url"
+        name="photoUrl"
         rules={[
-          { required: true, message: "Insira a URL de uma foto de boa qualidade!" },
+          {
+            required: true,
+            message: "Insira a URL de uma foto de boa qualidade!",
+          },
         ]}
       >
         <Input placeholder="https://exemplo.com/suafoto.jpg" size="large" />
@@ -118,9 +149,12 @@ export function CadastroArtistaForm({ onSuccess }: CadastroArtistaFormProps) {
 
       <Form.Item
         label="Link de Demonstração (Vídeo ou Áudio)"
-        name="samples_url"
+        name="samplesUrl"
         rules={[
-          { required: true, message: "Insira um link do YouTube, Spotify ou Soundcloud!" },
+          {
+            required: true,
+            message: "Insira um link do YouTube, Spotify ou Soundcloud!",
+          },
         ]}
       >
         <Input

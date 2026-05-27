@@ -13,7 +13,7 @@ import {
   Pagination,
   Avatar,
   Modal,
-  Dropdown, // Import adicionado
+  Dropdown,
 } from "antd";
 
 import {
@@ -24,15 +24,16 @@ import {
   StarOutlined,
   TeamOutlined,
   RocketOutlined,
-  UserOutlined, // Import adicionado
-  SettingOutlined, // Import adicionado
-  LogoutOutlined, // Import adicionado
+  UserOutlined,
+  SettingOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 
 import logo from "../assets/logotocaraul.png";
 import { Link, useNavigate } from "react-router-dom";
 import { CadastroEventoForm } from "../components/Venues/CadastroEventoForm";
-import { UserProfileDrawer } from "../components/UserProfileDrawer"; // Import da Gaveta adicionado
+import { UserProfileDrawer } from "../components/UserProfileDrawer";
+import { InscricaoEventoModal } from "../components/Venues/InscricaoEventoModal";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -93,7 +94,7 @@ function VenuesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState(venues[0]);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
+  const [isInscricaoOpen, setIsInscricaoOpen] = useState(false);
   useEffect(() => {
     document.title = "TocaRaul - Eventos";
   }, []);
@@ -115,7 +116,7 @@ function VenuesPage() {
           <img
             src={logo}
             alt="TocaRaul Logo"
-            style={{ height: 60, margin: 0, marginTop: 10, cursor: "pointer" }}
+            style={{ height: 60, margin: 0, marginTop: 30, cursor: "pointer" }}
           />
         </Link>
 
@@ -226,7 +227,7 @@ function VenuesPage() {
                     background: isSelected ? "#f8f9ff" : "#fff",
                     transition: "all 0.3s ease"
                   }}
-                  bodyStyle={{ padding: 16 }}
+                  styles={{ body: { padding: 16 } }}
                 >
                   <div style={{ display: "flex", gap: 14 }}>
                     <img
@@ -283,7 +284,7 @@ function VenuesPage() {
               border: "none",
               padding: 0,
             }}
-            bodyStyle={{ padding: 0 }}
+            styles={{ body: { padding: 0 } }}
           >
             {/* HERO IMAGE DINÂMICA */}
             <div
@@ -416,6 +417,7 @@ function VenuesPage() {
                 <Button
                   type="primary"
                   size="large"
+                  onClick={() => setIsInscricaoOpen(true)}
                   style={{
                     background: "#5b5ce2",
                     border: "none",
@@ -507,12 +509,17 @@ function VenuesPage() {
         <CadastroEventoForm onSuccess={() => setIsModalOpen(false)} />
       </Modal>
 
+      <InscricaoEventoModal
+        open={isInscricaoOpen}
+        onClose={() => setIsInscricaoOpen(false)}
+        venue={selectedVenue}
+      />
+
       {/* DRAWER DO PERFIL DO USUÁRIO */}
       <UserProfileDrawer 
         open={isProfileOpen} 
         onClose={() => setIsProfileOpen(false)} 
       />
-
     </Layout>
   );
 }
