@@ -21,7 +21,6 @@ import {
 import {
   SearchOutlined,
   HeartOutlined,
-  RocketOutlined,
   StarOutlined,
   UserOutlined, // Import adicionado
   SettingOutlined, // Import adicionado
@@ -31,8 +30,8 @@ import {
 import logo from "../assets/logotocaraul.png";
 import { Link, useNavigate } from "react-router-dom";
 import { listArtists } from "../services/artistService";
+import { clearAuthSession } from "../services/authService";
 import type { Artist } from "../interfaces/Artist";
-import { CadastroArtistaForm } from "../components/Artists/CadastroArtistaForm";
 import { ArtistasDestaqueList } from "../components/Artists/ArtistasDestaqueList";
 import { ArtistProfileDrawer } from "../components/Artists/ArtistProfileDrawer";
 import { UserProfileDrawer } from "../components/UserProfileDrawer"; // <-- IMPORT DO PERFIL DO USUÁRIO AQUI
@@ -69,7 +68,6 @@ const artistasDestaquesMock: any[] = [
 
 function ArtistsPage() {
   const [artists, setArtists] = useState<Artist[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDestaquesModalOpen, setIsDestaquesModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
@@ -91,14 +89,14 @@ function ArtistsPage() {
     fetchArtists();
   }, []);
 
-  const handleCadastroSucesso = () => {
-    setIsModalOpen(false);
-    fetchArtists();
-  };
-
   const handleOpenProfile = (artist: Artist) => {
     setSelectedArtist(artist);
     setIsDrawerOpen(true);
+  };
+
+  const handleLogout = () => {
+    clearAuthSession();
+    navigate("/login");
   };
 
   return (
@@ -145,7 +143,7 @@ function ArtistsPage() {
 
           <Button
             type="primary"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => navigate("/register?type=artist")}
             style={{
               borderRadius: 10,
               background: "#5b5ce2",
@@ -177,6 +175,7 @@ function ArtistsPage() {
                   icon: <LogoutOutlined />,
                   danger: true,
                   label: "Sair",
+                  onClick: handleLogout,
                 },
               ],
             }}
@@ -465,23 +464,6 @@ function ArtistsPage() {
           destaques={artistasDestaquesMock}
           onVerPerfil={handleOpenProfile}
         />
-      </Modal>
-
-      {/* MODAL DE CADASTRO */}
-      <Modal
-        title={
-          <Title level={4} style={{ margin: 0 }}>
-            <RocketOutlined style={{ color: "#5b5ce2", marginRight: 8 }} />
-            Cadastrar Novo Perfil de Artista
-          </Title>
-        }
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-        destroyOnClose
-        width={600}
-      >
-        <CadastroArtistaForm onSuccess={handleCadastroSucesso} />
       </Modal>
 
       {/* GAVETA (DRAWER) DE PERFIL DO ARTISTA */}

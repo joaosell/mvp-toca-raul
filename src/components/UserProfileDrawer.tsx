@@ -6,6 +6,8 @@ import {
   LogoutOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { clearAuthSession, getAuthUser } from "../services/authService";
 
 const { Title, Text } = Typography;
 
@@ -26,6 +28,25 @@ const currentUser = {
 };
 
 export function UserProfileDrawer({ open, onClose }: UserProfileDrawerProps) {
+  const navigate = useNavigate();
+  const authUser = getAuthUser();
+  const userName = authUser
+    ? `${authUser.firstName} ${authUser.lastName ?? ""}`.trim()
+    : currentUser.name;
+  const userEmail = authUser?.email ?? currentUser.email;
+  const userRole =
+    authUser?.type === "artist"
+      ? "Artista"
+      : authUser?.type === "venue_owner"
+        ? "Dono de estabelecimento"
+        : currentUser.role;
+
+  const handleLogout = () => {
+    clearAuthSession();
+    onClose();
+    navigate("/login");
+  };
+
   return (
     <Drawer
       title="Meu Perfil"
@@ -48,14 +69,14 @@ export function UserProfileDrawer({ open, onClose }: UserProfileDrawerProps) {
           style={{ border: "3px solid #5b5ce2", marginBottom: 12 }}
         />
         <Title level={4} style={{ margin: 0 }}>
-          {currentUser.name}
+          {userName}
         </Title>
         <Text type="secondary">
           <MailOutlined style={{ marginRight: 6 }} />
-          {currentUser.email}
+          {userEmail}
         </Text>
         <div style={{ marginTop: 12 }}>
-          <Tag color="gold">{currentUser.role}</Tag>
+          <Tag color="gold">{userRole}</Tag>
         </div>
       </div>
 
@@ -99,10 +120,14 @@ export function UserProfileDrawer({ open, onClose }: UserProfileDrawerProps) {
             title: "Sair / Logout",
             icon: <LogoutOutlined style={{ color: "#ff4d4f" }} />,
             isDanger: true,
+            onClick: handleLogout,
           },
         ]}
         renderItem={(item) => (
-          <List.Item style={{ cursor: "pointer", transition: "0.3s" }}>
+          <List.Item
+            onClick={item.onClick}
+            style={{ cursor: "pointer", transition: "0.3s" }}
+          >
             <List.Item.Meta
               avatar={item.icon}
               title={

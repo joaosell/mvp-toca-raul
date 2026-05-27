@@ -10,9 +10,7 @@ import {
   Typography,
   Space,
   Tag,
-  Pagination,
   Avatar,
-  Modal,
   Dropdown, // Import adicionado
 } from "antd";
 
@@ -23,7 +21,6 @@ import {
   CalendarOutlined,
   StarOutlined,
   TeamOutlined,
-  RocketOutlined,
   UserOutlined, // Import adicionado
   SettingOutlined, // Import adicionado
   LogoutOutlined, // Import adicionado
@@ -31,7 +28,7 @@ import {
 
 import logo from "../assets/logotocaraul.png";
 import { Link, useNavigate } from "react-router-dom";
-import { CadastroEventoForm } from "../components/Venues/CadastroEventoForm";
+import { clearAuthSession } from "../services/authService";
 import { UserProfileDrawer } from "../components/UserProfileDrawer"; // Import da Gaveta adicionado
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -90,13 +87,17 @@ const venues = [
 
 function VenuesPage() {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState(venues[0]);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   useEffect(() => {
     document.title = "TocaRaul - Eventos";
   }, []);
+
+  const handleLogout = () => {
+    clearAuthSession();
+    navigate("/login");
+  };
 
   return (
     <Layout style={{ minHeight: "100vh", background: "#f5f7fb" }}>
@@ -142,7 +143,7 @@ function VenuesPage() {
 
           <Button
             type="primary"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => navigate("/register?type=venue")}
             style={{
               borderRadius: 10,
               background: "#5b5ce2",
@@ -174,6 +175,7 @@ function VenuesPage() {
                   icon: <LogoutOutlined />,
                   danger: true,
                   label: "Sair",
+                  onClick: handleLogout,
                 },
               ],
             }}
@@ -489,23 +491,6 @@ function VenuesPage() {
           </Col>
         </Row>
       </Footer>
-
-      {/* MODAL DE CADASTRO DO EVENTO/ESPAÇO */}
-      <Modal
-        title={
-          <Title level={4} style={{ margin: 0 }}>
-            <RocketOutlined style={{ color: "#5b5ce2", marginRight: 8 }} />
-            Cadastrar Novo Espaço / Evento
-          </Title>
-        }
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-        destroyOnClose
-        width={650}
-      >
-        <CadastroEventoForm onSuccess={() => setIsModalOpen(false)} />
-      </Modal>
 
       {/* DRAWER DO PERFIL DO USUÁRIO */}
       <UserProfileDrawer 

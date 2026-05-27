@@ -1,4 +1,4 @@
-import { Drawer, Typography, Tag, Divider, Button, Space, Image } from "antd";
+import { Drawer, Typography, Tag, Divider, Button, Space } from "antd";
 import {
   PlayCircleOutlined,
   DollarOutlined,

@@ -26,11 +26,25 @@ function MainPage() {
       <div style={{ 
         width: "100%", 
         display: "flex", 
-        justifyContent: "center", 
+        justifyContent: "center",
+        position: "relative",
         paddingTop: 40, 
         paddingBottom: 16,
         flexShrink: 0 
       }}>
+        <Button
+          type="primary"
+          style={{
+            position: "absolute",
+            top: 24,
+            right: 40,
+            borderRadius: 10,
+            background: "#5b5ce2",
+          }}
+          onClick={() => navigate("/login")}
+        >
+          Entrar
+        </Button>
         <img 
           src={logo} 
           alt="TocaRaul Logo" 
