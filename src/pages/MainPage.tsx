@@ -22,23 +22,23 @@ function MainPage() {
   }, []);
   return (
     <Layout style={{ height: "100vh", background: "#f5f7fb", display: "flex", flexDirection: "column" }}>
-      
-      <div style={{ 
-        width: "100%", 
-        display: "flex", 
-        justifyContent: "center", 
-        paddingTop: 40, 
+
+      <div style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: 40,
         paddingBottom: 16,
-        flexShrink: 0 
+        flexShrink: 0
       }}>
-        <img 
-          src={logo} 
-          alt="TocaRaul Logo" 
-          style={{ 
-            height: 180, 
+        <img
+          src={logo}
+          alt="TocaRaul Logo"
+          style={{
+            height: 180,
             objectFit: "contain",
-            maxWidth: "90%", 
-          }} 
+            maxWidth: "90%",
+          }}
         />
       </div>
 
@@ -100,7 +100,7 @@ function MainPage() {
               </div>
             </Card>
           </Col>
-          
+
           <Col xs={24} md={12}>
             <Card
               style={{

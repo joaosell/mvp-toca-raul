@@ -10,7 +10,6 @@ import {
   Typography,
   Space,
   Tag,
-  Pagination,
   Avatar,
   Modal,
   Dropdown,
@@ -181,9 +180,9 @@ function VenuesPage() {
             placement="bottomRight"
             trigger={["click"]}
           >
-            <Avatar 
-              src="https://i.pravatar.cc/150?img=11" 
-              style={{ cursor: "pointer", border: "2px solid transparent" }} 
+            <Avatar
+              src="https://i.pravatar.cc/150?img=11"
+              style={{ cursor: "pointer", border: "2px solid transparent" }}
               size="large"
             />
           </Dropdown>
@@ -516,9 +515,9 @@ function VenuesPage() {
       />
 
       {/* DRAWER DO PERFIL DO USUÁRIO */}
-      <UserProfileDrawer 
-        open={isProfileOpen} 
-        onClose={() => setIsProfileOpen(false)} 
+      <UserProfileDrawer
+        open={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
       />
     </Layout>
   );
